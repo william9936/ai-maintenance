@@ -1,0 +1,58 @@
+app:
+  # 环境：dev or prod
+  env: prod
+  # 分布式节点(用于生成分布式id应保证各个机器节点不一致)
+  machineID: 1
+  server-port: 8080
+  # 日志文件 ./logs/gin-quickstart.log
+  log-file: ./logs/gin-quickstart.log
+# 数据库
+mysql:
+  host: "mysql"
+  port: 3306
+  user: "root"
+  password: "123456"
+  dbname: "go-shop-server"
+  max-open-conns: 10
+  max-idle-conns: 5
+# redis
+redis:
+  addr: "redis:6379"
+  password: ""
+  db: 0
+# asynq
+asynq:
+  addr: "redis:6379"
+  password: ""
+  db: 1
+  # 是否开启监控
+  monitor:
+    # 认证信息（可以在浏览器安装插件ModHeader在请求头中添加认证信息）
+    username: "admin"
+    password: "U3og32tmtKAv8LQGmFPQ"
+    # 是否开启
+    enable: true
+    # RootPath
+    root-path: "/monitoring"
+    # 是否只读
+    readonly: false
+# 短信
+sms:
+  sms_server: https://xxxx
+  sms_send_path: /v1/sms
+  sms_token: xxxxxxxxx
+  sms_verify_expire: 360
+# jwt
+jwt:
+  # 过期时间(秒)
+  # access_token 过期时间 1小时
+  access-expire: 3600
+  # refresh_token 过期时间 7天
+  refresh-expire: 604800
+  # 签名
+  issuer: sni
+  # 密钥
+  secret: 7bdfc027-ef5f-67f3-af9f-311bcec930d5
+# 文件上传目录
+upload:
+  dir: ./uploads

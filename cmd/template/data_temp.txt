@@ -1,0 +1,59 @@
+package data
+
+import (
+    "context"
+    "errors"
+    "fmt"
+	"github.com/Madou-Shinni/gin-quickstart/internal/domain"
+	"github.com/Madou-Shinni/gin-quickstart/pkg/global"
+	"github.com/Madou-Shinni/gin-quickstart/pkg/model"
+	"github.com/Madou-Shinni/gin-quickstart/pkg/request"
+	"github.com/Madou-Shinni/gin-quickstart/pkg/scopes"
+)
+
+type {{.Module}}Repo struct {
+}
+
+func (s *{{.Module}}Repo) Create(ctx context.Context, {{.ModuleLower}} *domain.{{.Module}}) error {
+	return global.DB.WithContext(ctx).Create(&{{.ModuleLower}}).Error
+}
+
+func (s *{{.Module}}Repo) Delete(ctx context.Context, {{.ModuleLower}} domain.{{.Module}}) error {
+	return global.DB.WithContext(ctx).Delete(&{{.ModuleLower}}).Error
+}
+
+func (s *{{.Module}}Repo) DeleteByIds(ctx context.Context, ids request.Ids) error {
+	return global.DB.WithContext(ctx).Delete(&[]domain.{{.Module}}{}, ids.Ids).Error
+}
+
+func (s *{{.Module}}Repo) Update(ctx context.Context, {{.ModuleLower}} domain.{{.Module}}) error {
+    if {{.ModuleLower}}.ID == 0 {
+        return errors.New(fmt.Sprintf("missing %s.id", "{{.ModuleLower}}"))
+    }
+	return global.DB.WithContext(ctx).Model(&domain.{{.Module}}{Model: model.Model{ID: {{.ModuleLower}}.ID}}).Updates(&{{.ModuleLower}}).Error
+}
+
+func (s *{{.Module}}Repo) Find(ctx context.Context, {{.ModuleLower}} domain.{{.Module}}) (domain.{{.Module}}, error) {
+	db := global.DB.WithContext(ctx).Model(&domain.{{.Module}}{})
+	// TODO：条件过滤
+
+	res := db.First(&{{.ModuleLower}})
+
+	return {{.ModuleLower}}, res.Error
+}
+
+func (s *{{.Module}}Repo) List(ctx context.Context, page domain.Page{{.Module}}Search) ([]domain.{{.Module}}, int64, error) {
+	var (
+		{{.ModuleLower}}List []domain.{{.Module}}
+		count int64
+		err      error
+	)
+	// db
+	db := global.DB.WithContext(ctx).Model(&domain.{{.Module}}{})
+
+	// TODO：条件过滤
+
+	err = db.Count(&count).Scopes(scopes.Paginate(page.PageSearch), scopes.OrderBy(page.OrderBy)).Find(&{{.ModuleLower}}List).Error
+
+	return {{.ModuleLower}}List, count, err
+}

@@ -1,0 +1,20 @@
+version: '3.5'
+
+networks:
+  shared:
+    external: true
+
+services:
+  server:
+    container_name: gin-quickstart
+    image: gin-quickstart:v1.8.0-15-g2c131de
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ./logs:/app/logs
+      - ./configs:/app/configs
+      - ./uploads:/app/uploads
+    ports:
+      - "8080:8080"
+    networks:
+      - shared
