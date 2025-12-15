@@ -39,7 +39,7 @@ func TestCasbin(t *testing.T) {
 
 	global.DB = global.NewData(db)
 	service := NewSysCasbinService()
-	t.Log(service.e)
+	t.Log(service.e())
 	s2 := NewSysCasbinService()
-	t.Log(s2.e)
+	t.Log(s2.e())
 }

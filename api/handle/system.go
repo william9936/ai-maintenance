@@ -1,6 +1,8 @@
 package handle
 
 import (
+	"time"
+
 	"github.com/Madou-Shinni/gin-quickstart/internal/domain"
 	"github.com/Madou-Shinni/gin-quickstart/internal/service"
 	"github.com/Madou-Shinni/gin-quickstart/pkg/constant"
@@ -30,11 +32,15 @@ var (
 )
 
 type SystemHandle struct {
-	casbinService service.SysCasbinService
+	casbinService  *service.SysCasbinService
+	monitorService *service.MonitorService
 }
 
 func NewSystemHandle() *SystemHandle {
-	return &SystemHandle{}
+	return &SystemHandle{
+		casbinService:  casbinService,
+		monitorService: service.MonitorServiceEx,
+	}
 }
 
 // Init 系统初始化
@@ -82,4 +88,25 @@ func (cl *SystemHandle) Init(c *gin.Context) {
 
 	defaultUser.Password = pwd
 	response.Success(c, defaultUser)
+}
+
+// MonitorState 监控状态
+// @Tags     System
+// @Summary  监控状态
+// @accept   application/json
+// @Produce  application/json
+// @Success  200  {string} string            "{"code":200,"msg":"查询成功","data":{}"}"
+// @Router   /system/monitor [get]
+func (cl *SystemHandle) MonitorState(c *gin.Context) {
+	var req service.MonitorStateReq
+
+	req.StartTime = time.Now().Add(-time.Hour * 24).Unix()
+	req.EndTime = time.Now().Unix()
+	resp, err := cl.monitorService.All(c.Request.Context(), req.StartTime, req.EndTime)
+	if err != nil {
+		response.Error(c, constant.CODE_FIND_FAILED, err.Error())
+		return
+	}
+
+	response.Success(c, resp)
 }

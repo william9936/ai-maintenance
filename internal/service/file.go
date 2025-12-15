@@ -4,6 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"mime/multipart"
+	"os"
+	"strconv"
+	"strings"
+
 	"github.com/Madou-Shinni/gin-quickstart/internal/data"
 	"github.com/Madou-Shinni/gin-quickstart/internal/domain"
 	"github.com/Madou-Shinni/gin-quickstart/pkg/constant"
@@ -15,10 +20,6 @@ import (
 	"github.com/Madou-Shinni/go-logger"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
-	"mime/multipart"
-	"os"
-	"strconv"
-	"strings"
 )
 
 // 定义接口
@@ -126,8 +127,8 @@ func (s *FileService) UploadChunk(ctx context.Context, file domain.File, fileHea
 	// 查询分片是否已经上传
 	flag := global.Rdb.HGet(
 		ctx,
-		fmt.Sprintf(constant.FileChunkHkey+strconv.FormatInt(file.ID, 10)),
-		fmt.Sprintf(constant.FileChunkHFiled+strconv.Itoa(file.Index)),
+		fmt.Sprint(constant.FileChunkHkey+strconv.FormatInt(file.ID, 10)),
+		fmt.Sprint(constant.FileChunkHFiled+strconv.Itoa(file.Index)),
 	).Val()
 	if flag == "1" {
 		// 已经上传你直接返回
@@ -144,8 +145,8 @@ func (s *FileService) UploadChunk(ctx context.Context, file domain.File, fileHea
 		// redis 记录分片文件信息
 		global.Rdb.HSet(
 			ctx,
-			fmt.Sprintf(constant.FileChunkHkey+strconv.FormatInt(file.ID, 10)),
-			fmt.Sprintf(constant.FileChunkHFiled+strconv.Itoa(file.Index)),
+			fmt.Sprint(constant.FileChunkHkey+strconv.FormatInt(file.ID, 10)),
+			fmt.Sprint(constant.FileChunkHFiled+strconv.Itoa(file.Index)),
 			"1")
 
 		file.IsFinish = true
@@ -181,7 +182,7 @@ func (s *FileService) MergeChunk(ctx context.Context, file domain.File) (domain.
 	// 查询所有分片是否上传完成
 	chunkMap := global.Rdb.HGetAll(
 		ctx,
-		fmt.Sprintf(constant.FileChunkHkey+strconv.FormatInt(file.ID, 10)),
+		fmt.Sprint(constant.FileChunkHkey+strconv.FormatInt(file.ID, 10)),
 	).Val()
 	if len(chunkMap) < file.TotalChunk {
 		// 分片未上传完成，无法合并
@@ -201,7 +202,7 @@ func (s *FileService) MergeChunk(ctx context.Context, file domain.File) (domain.
 	if err != nil {
 		logger.Error("删除分片文件失败", zap.Error(err))
 	}
-	global.Rdb.Del(ctx, fmt.Sprintf(constant.FileChunkHkey+strconv.FormatInt(file.ID, 10)))
+	global.Rdb.Del(ctx, fmt.Sprint(constant.FileChunkHkey+strconv.FormatInt(file.ID, 10)))
 
 	// 返回文件地址
 	file.FilePath = dst

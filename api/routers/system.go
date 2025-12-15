@@ -12,5 +12,6 @@ func SystemRouterRegister(r *gin.RouterGroup) {
 	systemGroup := r.Group("system")
 	{
 		systemGroup.POST("init", systemHandle.Init)
+		systemGroup.GET("monitor", systemHandle.MonitorState)
 	}
 }

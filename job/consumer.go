@@ -3,14 +3,16 @@ package job
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
+
 	"github.com/Madou-Shinni/gin-quickstart/constants"
 	"github.com/Madou-Shinni/gin-quickstart/internal/conf"
+	"github.com/Madou-Shinni/gin-quickstart/internal/service"
 	"github.com/Madou-Shinni/go-logger"
 	"github.com/hibiken/asynq"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
-	"log"
-	"strings"
 )
 
 func RunConsumer() {
@@ -29,6 +31,7 @@ func RunConsumer() {
 	)
 
 	mux := asynq.NewServeMux()
+	monitorService := service.MonitorServiceEx
 
 	// 异步任务
 	mux.HandleFunc(constants.QueueSms, handleSmsSend)
@@ -36,6 +39,8 @@ func RunConsumer() {
 
 	// 定时任务
 	mux.HandleFunc(constants.TaskTest, handleTaskTest)
+	// 监控任务
+	mux.HandleFunc(constants.TaskMonitor, monitorService.Handle)
 
 	if err := srv.Run(mux); err != nil {
 		log.Fatalf("could not run server: %v", err)

@@ -56,3 +56,14 @@ jwt:
 # 文件上传目录
 upload:
   dir: ./uploads
+# 监控
+monitor:
+  # 最大记录数
+  max-record: 288
+  # 监控类型：file or redis
+  type: file
+  file:
+    path: ./data
+    # 存时间间隔(秒)
+    stub-time: 1
+

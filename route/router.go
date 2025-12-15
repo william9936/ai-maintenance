@@ -1,4 +1,4 @@
-package initialize
+package route
 
 import (
 	"fmt"
@@ -66,6 +66,7 @@ func RunServer() {
 	routers.SysMenuRouterRegister(private)
 	routers.DataImportRouterRegister(public)
 	routers.NoPageRouterRegister(private)
+	routers.SystemFileRouterRegister(public)
 
 	log.Printf("[GIN-QuickStart] 接口文档地址：http://localhost:%v/swagger/index.html\n", conf.Conf.ServerPort)
 

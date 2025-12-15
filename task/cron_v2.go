@@ -2,12 +2,13 @@ package task
 
 import (
 	"encoding/json"
+	"time"
+
 	"github.com/Madou-Shinni/gin-quickstart/constants"
 	"github.com/Madou-Shinni/gin-quickstart/internal/conf"
 	"github.com/Madou-Shinni/go-logger"
 	"github.com/hibiken/asynq"
 	"go.uber.org/zap"
-	"time"
 )
 
 const defaultMaxRetry = 3
@@ -83,6 +84,7 @@ func V2Init() {
 	v2 := NewTaskV2(scheduler, WithMaxRetry(defaultMaxRetry))
 
 	v2.Register("@every 30m", v2.NewTask(constants.TaskTest, nil)) // 每隔30分钟同步一次
+	//v2.Register("@every 1s", v2.NewTask(constants.TaskMonitor, nil)) // 每隔1s监控一次
 
 	if err := scheduler.Run(); err != nil {
 		logger.Error("could not run scheduler", zap.Error(err))

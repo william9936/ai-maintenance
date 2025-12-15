@@ -120,6 +120,7 @@ func MysqlInit(config *conf.MysqlConfig) {
 		domain.SysApi{},
 		domain.SysMenu{},
 		domain.DataImport{},
+		domain.SystemFile{},
 	)
 
 	global.DB = global.NewData(db)

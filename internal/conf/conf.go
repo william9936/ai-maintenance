@@ -3,13 +3,14 @@ package conf
 var Conf = new(ProfileInfo)
 
 type ProfileInfo struct {
-	*App          `mapstructure:"app"`
-	*MysqlConfig  `mapstructure:"mysql"`
-	*RedisConfig  `mapstructure:"redis"`
-	*JwtConfig    `mapstructure:"jwt"`
-	*UploadConfig `mapstructure:"upload"`
-	*AsynqConfig  `mapstructure:"asynq"`
-	*SMSConfig    `mapstructure:"sms"`
+	*App           `mapstructure:"app"`
+	*MysqlConfig   `mapstructure:"mysql"`
+	*RedisConfig   `mapstructure:"redis"`
+	*JwtConfig     `mapstructure:"jwt"`
+	*UploadConfig  `mapstructure:"upload"`
+	*AsynqConfig   `mapstructure:"asynq"`
+	*SMSConfig     `mapstructure:"sms"`
+	*MonitorConfig `mapstructure:"monitor"`
 }
 
 // 系统配置
@@ -71,4 +72,17 @@ type SMSConfig struct {
 	SmsSendPath     string `mapstructure:"sms_send_path"`
 	SmsToken        string `mapstructure:"sms_token"`
 	SmsVerifyExpire int    `mapstructure:"sms_verify_expire"`
+}
+
+type MonitorConfig struct {
+	// 监控类型：file or redis
+	Type string `mapstructure:"type"`
+	// 最大记录数
+	MaxRecord int64 `mapstructure:"max-record"`
+	// 文件配置
+	File struct {
+		Path string `mapstructure:"path"`
+		// 存时间间隔(秒)
+		StubTime int64 `mapstructure:"stub-time"`
+	} `mapstructure:"file"`
 }

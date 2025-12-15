@@ -6,5 +6,6 @@ const (
 )
 
 const (
-	TaskTest = "task:test"
+	TaskTest    = "task:test"
+	TaskMonitor = "task:monitor"
 )

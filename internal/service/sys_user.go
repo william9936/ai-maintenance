@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/Madou-Shinni/gin-quickstart/internal/conf"
 	"github.com/Madou-Shinni/gin-quickstart/internal/data"
 	"github.com/Madou-Shinni/gin-quickstart/internal/domain"
@@ -16,7 +18,6 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
-	"time"
 )
 
 var (
@@ -148,7 +149,7 @@ func (s *SysUserService) Login(ctx context.Context, user domain.LoginReq) (inter
 	token, err := tools.GenToken(mp, conf.Conf.JwtConfig.Secret)
 	if err != nil {
 		logger.Error("token生成失败", zap.Error(err), zap.Any("jwt.MapClaims", mp))
-		return nil, fmt.Errorf(constant.CODE_ERR_BUSY.Msg())
+		return nil, fmt.Errorf("%s", constant.CODE_ERR_BUSY.Msg())
 	}
 
 	return token, nil
